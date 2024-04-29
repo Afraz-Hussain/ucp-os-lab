@@ -1,4 +1,4 @@
-// Client side implementation of TCP client-server model 
+// Client side implementation of UDP client-server model 
 #include <stdio.h> 
 #include <stdlib.h> 
 #include <unistd.h> 
@@ -15,7 +15,7 @@
 int main() { 
 	int sockfd; 
 	char buffer[MAXLINE]; 
-	char *hello; 
+	char *hello = "Hello server"; 
 	struct sockaddr_in	 servaddr; 
 
 	// Creating socket file descriptor 
@@ -33,16 +33,14 @@ int main() {
 	
 	connect (sockfd, (struct sockaddr*) &servaddr, sizeof(servaddr)); 
 	int n, len; 
-	printf("Enter a string for Client 2: ");
-	 scanf("%[^\n]%*c",hello); 
 	
 	send(sockfd, (const char *)hello, strlen(hello),0); 
 	//printf("Hello message sent.\n"); 
 		
 	n = recv(sockfd, (char *)buffer, MAXLINE, 0); 
 	buffer[n] = '\0'; 
-	printf("Server with port %d:",PORT); 
-	printf("\n %s",buffer);
+	printf("Server with port %d: %s\n",PORT, buffer); 
+	
 	
 	close(sockfd); 
 	return 0; 

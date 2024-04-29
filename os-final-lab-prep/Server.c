@@ -1,4 +1,4 @@
-// Server side implementation of TCP client-server model 
+// Server side implementation of UDP client-server model 
 #include <stdio.h> 
 #include <stdlib.h> 
 #include <unistd.h> 
@@ -10,14 +10,12 @@
 
 #define PORT	 8080 
 #define MAXLINE 1024 
-#define NO_OF_CHARS 256
 
 // Driver code 
 int main() { 
 	int sockfd; 
 	char buffer[MAXLINE]; 
-	char *hello;
-	char *hello1; 
+	char *hello = "Hello Client"; 
 	struct sockaddr_in servaddr, cliaddr; 
 	
 	// Creating socket file descriptor 
@@ -43,7 +41,6 @@ int main() {
 	
 	listen (sockfd,5);
 	int newfd;
-	int i;
 	while(1)
 	{
 		int len= sizeof(cliaddr), n; 
@@ -51,34 +48,15 @@ int main() {
 		
 		int p_id;
 		p_id= fork();
-		i=1;
+
 		if(p_id == 0)
 		{
 			close(sockfd);
 			n = recv(newfd, (char *)buffer, MAXLINE,0); 
 			buffer[n] = '\0'; 
-			printf("Client with port %d: %s\n",ntohs(cliaddr.sin_port),  buffer); 
-			//printf("Client %d",i," with port %d: %s\n",ntohs(cliaddr.sin_port),  buffer);
-			//i++;
-			int count[NO_OF_CHARS] = { 0 };
-			for (int i = 0; buffer[i]; i++)
-				count[buffer[i]]++;
-			int odd = 0;
-			for (int i = 0; i < NO_OF_CHARS; i++) 
-			{
-				if (count[i] & 1)
-					odd++;
-
-				if (odd > 1)
-					hello="string cannot be a plaindrom\n";
-			}
-
-			
-			hello="string can be a plaindrom\n";
-
-
+			printf("Client  with port %d: %s\n",ntohs(cliaddr.sin_port),  buffer); 
 			send(newfd, (const char *)hello, strlen(hello),0); 
-			printf("\nInformation message sent.\n"); 
+			//printf("Hello message sent.\n"); 
 			close(newfd);
 			exit(-1);
 		}
